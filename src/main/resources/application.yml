@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: test-data-api
+
+  datasource:
+    urL: jdbc:postgresql://localhost:5432/testdata
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate  # Используем Flyway, поэтому schema не создается автоматически
+    show-sql: true        # Показывать SQL-запросы в консоли
+    properties:
+      hibernate:
+        format_sql: true  # Форматирование SQL-запросов
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
