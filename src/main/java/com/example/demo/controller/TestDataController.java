@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.exception.NotFoundException;
 import com.example.demo.model.TestData;
 import com.example.demo.service.TestDataService;
 //import org.apache.coyote.Response;
@@ -23,7 +24,6 @@ public class TestDataController {
     public TestDataController(TestDataService testDataService) {
         this.testDataService = testDataService;
     }
-
 
     // READ ALL
     @Operation(summary = "Получить все тестовые данные", description = "Возвращает список объектов Test Data")
@@ -56,9 +56,14 @@ public class TestDataController {
     })
     @GetMapping("/type/{type}")
     public ResponseEntity<List<TestData>> getByType(@PathVariable String type) {
-        return ResponseEntity.ok(testDataService.getByType(type));
-    }
+        List<TestData> data = testDataService.getByType(type);
 
+        if(data.isEmpty()) {
+            throw new NotFoundException("Данные с типом " + type + " не найдены");
+        }
+
+        return ResponseEntity.ok(data);
+    }
 
     // READ BY name
     @Operation(summary = "Получить тестовые данные по имени", description = "Возвращает список тестовых данных по name")
@@ -68,7 +73,9 @@ public class TestDataController {
     })
     @GetMapping("/name/{name}")
     public ResponseEntity<List<TestData>> getByName(@PathVariable String name) {
-        return ResponseEntity.ok(testDataService.getByName(name));
+        List<TestData> data = testDataService.getByName(name);
+        if (data.isEmpty()) {throw new NotFoundException("Данные с именем " + name + " не найдены"); }
+        return ResponseEntity.ok(data);
     }
 
 
